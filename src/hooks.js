@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import uuid from "uuid";
 
@@ -9,32 +9,18 @@ const useFlip = (initialState = false) => {
     const toggleFlip = () => {
         setFlip(flip => !flip)
     }
-
     return [flip, toggleFlip]
 }
 
-
-
-
-const useAxios = async (url) => {
+const useAxios = (baseURL) => {
     const [arr, setArr] = useState([]);
-    const res = await axios.get(url);
 
-
-
-    return [arr, ]
+    const updateArray = async (name = '') => {
+        const url = baseURL + name
+        const response = await axios.get(url)
+        setArr(arr => [...arr, { ...response.data, id: uuid() }])
+    }
+    return [arr, updateArray]
 }
-
-
-
-// const [cards, setCards] = useState([]);
-// const addCard = async () => {
-//   const response = await axios.get(
-//     "https://deckofcardsapi.com/api/deck/new/draw/"
-//   );
-//   setCards(cards => [...cards, { ...response.data, id: uuid() }]);
-// };
-
-
 
  export { useFlip, useAxios }
